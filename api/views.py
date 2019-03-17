@@ -1,6 +1,9 @@
 from django.shortcuts import render
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
-from django.http import JsonResponse
+from twilio.twiml.messaging_response import MessagingResponse
+
 
 
 def display_classroom(request):
@@ -42,6 +45,11 @@ def list_questions(request):
 def create_classroom(request):
     return JsonResponse({"created": True})
 
-
+@csrf_exempt
 def receive_question(request):
-    pass
+    resp = MessagingResponse()
+
+    # Add a message
+    resp.message("Got it" + str(request.POST) + "body: " + str(request.body))
+
+    return HttpResponse(str(resp))
