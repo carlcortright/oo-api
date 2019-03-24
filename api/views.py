@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from twilio.twiml.messaging_response import MessagingResponse
 
-from .models import Classroom
+from .models import Classroom, Question
 from django.db.utils import IntegrityError
 from .utils import new_phone_number, serialize_questions
 
@@ -68,8 +68,19 @@ def create_classroom(request):
 
 def receive_question(request):
     resp = MessagingResponse()
-
-    # Add a message
-    resp.message("Got it" + str(request.POST) + "body: " + str(request.body))
-
-    return HttpResponse(str(resp))
+    phone_number = request.POST['To']
+    try:
+        classroom = Classroom.objects.get(phone_number=phone_number)
+    except:
+        resp.message("Class does not exist")
+        return HttpResponse(resp)
+    try: 
+        Question.objects.create(
+            content=request.POST['Body'],
+            classroom=classroom
+        )
+    except:
+        resp.message("Server Error")
+        return HttpResponse(resp)
+    resp.message("Question received!")
+    return HttpResponse(resp)
