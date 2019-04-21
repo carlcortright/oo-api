@@ -78,6 +78,8 @@ def receive_question(request):
         resp.message("Class does not exist")
         return HttpResponse(resp)
     try: 
+        # TODO: parse question type out of request.POST['body']
+        # Save the question type in the below create call
         Question.objects.create(
             content=request.POST['Body'],
             classroom=classroom
