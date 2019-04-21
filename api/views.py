@@ -7,6 +7,7 @@ from twilio.twiml.messaging_response import MessagingResponse
 from .models import Classroom, Question
 from django.db.utils import IntegrityError
 from .utils import new_phone_number, serialize_questions
+import json
 
 
 def display_classroom(request, name):
@@ -52,7 +53,9 @@ def list_questions(request):
 
 
 def create_classroom(request):
-    name = request.POST['name']
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    name = body['name']
     if ' ' in name:
         return JsonResponse({'error': 'invalid class name'})
     try:
