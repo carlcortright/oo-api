@@ -8,7 +8,7 @@ from datetime import datetime
 
 from .models import Classroom, Question
 from django.db.utils import IntegrityError
-from .utils import new_phone_number, serialize_questions
+from .utils import new_phone_number, serialize_questions, parse_question_type
 import json
 
 
@@ -82,10 +82,12 @@ def receive_question(request):
     try: 
         # TODO: parse question type out of request.POST['body']
         # Save the question type in the below create call
+        question_code, question_text = parse_question_type(request.POST['Body'])
         Question.objects.create(
-            content=request.POST['Body'],
+            content=question_text,
             classroom=classroom,
-            created=datetime.now()
+            created=datetime.now(),
+            question_type=question_code
         )
     except:
         resp.message("Server Error")
