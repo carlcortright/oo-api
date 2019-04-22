@@ -20,4 +20,4 @@ def new_phone_number():
 
 
 def serialize_questions(question_query):
-    return [question for question in question_query.values('id', 'question_type', 'content')]
+    return [question for question in question_query.values('id', 'question_type', 'content', 'created')]

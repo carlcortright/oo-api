@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 from .classroom import Classroom
 
 class Question(models.Model):
@@ -14,3 +15,4 @@ class Question(models.Model):
         default="GN")
     content = models.TextField()
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    created = models.DateTimeField(default=date.today)

@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from twilio.twiml.messaging_response import MessagingResponse
 
+from datetime import datetime
+
 from .models import Classroom, Question
 from django.db.utils import IntegrityError
 from .utils import new_phone_number, serialize_questions
@@ -82,7 +84,8 @@ def receive_question(request):
         # Save the question type in the below create call
         Question.objects.create(
             content=request.POST['Body'],
-            classroom=classroom
+            classroom=classroom,
+            created=datetime.now()
         )
     except:
         resp.message("Server Error")
