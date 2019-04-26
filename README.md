@@ -15,12 +15,15 @@ In class, many students don’t have the courage to ask a question in front of a
 # Installing and executing
 
 First install virtualenv if you dont have it:
+
 `pip3 install virtualenv`
 
 Then create a new virtual environment. Make sure to do this in the project directory. This isolates the package installs you do so it doesn’t mess with your python env:
+
 `virtualenv env`
 
 Next activate and install the project requiremnts:
+
 `source env/bin/activate`
 `pip install -r requirements.txt`
 
@@ -35,9 +38,11 @@ SECRET_KEY=xxxxx
 ```
 
 Then you can set up the local database:
+
 `python manage.py migrate`
 
 Finally run the dev server:
+
 `python manage.py runserver`
 
 Running with text messages locally requires an ngrok account. 
