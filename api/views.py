@@ -13,6 +13,8 @@ import json
 
 
 def display_classroom(request, name):
+    """ Gets all of the data for a class including name, phone number and questions
+    """
     # Get the classroom db object the user is trying to access
     try:
         classroom = Classroom.objects.get(class_name=name)
@@ -34,6 +36,9 @@ def display_classroom(request, name):
 
 
 def list_questions(request):
+    """ Lists all of the questions associated with a classroom. 
+        We poll this endpoint from the frontend to look for new questions.
+    """
     try:
         classroom = request.GET['classroom']
         latest_question_id = int(request.GET['id'])
@@ -55,11 +60,15 @@ def list_questions(request):
 
 
 def create_classroom(request):
+    """ Creates a new classroom in the database
+    """
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     name = body['name']
+    # Validate the class name
     if ' ' in name:
         return JsonResponse({'error': 'invalid class name'})
+    # Try to create a new classroom with a unique phone number
     try:
         number = new_phone_number()
         classroom = Classroom.objects.create(
@@ -72,16 +81,20 @@ def create_classroom(request):
 
 
 def receive_question(request):
+    """ Endpoint used by twilio to receive new questions
+        We don't hit this endpoint directly. Instead twilio posts to it
+        when a new text is received
+    """
     resp = MessagingResponse()
+    # First find the classroom associated with the phone number texted
     phone_number = request.POST['To']
     try:
         classroom = Classroom.objects.get(phone_number=phone_number)
     except:
         resp.message("Class does not exist")
         return HttpResponse(resp)
+    # Create a new question from the text received
     try: 
-        # TODO: parse question type out of request.POST['body']
-        # Save the question type in the below create call
         question_code, question_text = parse_question_type(request.POST['Body'])
         Question.objects.create(
             content=question_text,
