@@ -2,6 +2,9 @@
 
 > API for classqa.carl.fun
 
+*This repository is split into two repositories. Below is the link to our frontend.*
+https://github.com/carlcortright/oo-frontend
+
 # Group Members
 Carl Cortright and Avery Olson
 
